@@ -1,0 +1,110 @@
+.about-page {
+  padding-top: calc(var(--nav-height) + 80px);
+  padding-bottom: 120px;
+}
+ 
+.about-intro { margin-bottom: 80px; }
+ 
+.about-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 80px;
+  margin-bottom: 80px;
+  padding-bottom: 80px;
+  border-bottom: 1px solid var(--border);
+ 
+  @media (max-width: 768px) { grid-template-columns: 1fr; gap: 40px; }
+}
+ 
+.bio-text {
+  font-family: var(--font-mono);
+  font-size: 13px;
+  line-height: 1.9;
+  color: var(--text-muted);
+  margin-bottom: 20px;
+}
+ 
+.contact-info { margin-top: 32px; }
+ 
+.skills-list {
+  list-style: none;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+ 
+.skill-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  color: var(--text-muted);
+  padding: 10px 14px;
+  border: 1px solid var(--border);
+  transition: all 0.2s;
+ 
+  &:hover {
+    border-color: var(--accent-border);
+    color: var(--text);
+    background: var(--accent-dim);
+  }
+}
+ 
+.skill-dot {
+  width: 4px; height: 4px;
+  background: var(--accent);
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+ 
+.experience-section { margin-bottom: 80px; }
+ 
+.timeline { margin-top: 32px; }
+ 
+.timeline-item {
+  display: grid;
+  grid-template-columns: 180px 1fr;
+  gap: 40px;
+  padding: 32px 0;
+  border-top: 1px solid var(--border);
+ 
+  @media (max-width: 600px) { grid-template-columns: 1fr; gap: 12px; }
+}
+ 
+.timeline-period {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.1em;
+  color: var(--accent);
+  padding-top: 4px;
+}
+ 
+.timeline-role {
+  font-family: var(--font-display);
+  font-size: 20px;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  margin-bottom: 4px;
+}
+ 
+.timeline-company {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  color: var(--text-muted);
+  margin-bottom: 12px;
+}
+ 
+.timeline-desc {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  line-height: 1.8;
+  color: var(--text-muted);
+  margin-bottom: 12px;
+}
+ 
+.about-cta {
+  display: flex;
+  gap: 16px;
+  flex-wrap: wrap;
+}

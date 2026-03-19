@@ -1,0 +1,12 @@
+import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { ResourcesComponent } from './resources';
+ 
+describe('ResourcesComponent', () => {
+  let fixture: ComponentFixture<ResourcesComponent>;
+  beforeEach(async () => {
+    await TestBed.configureTestingModule({ imports: [ResourcesComponent] }).compileComponents();
+    fixture = TestBed.createComponent(ResourcesComponent);
+    fixture.detectChanges();
+  });
+  it('should create', () => { expect(fixture.componentInstance).toBeTruthy(); });
+});

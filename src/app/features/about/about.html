@@ -1,0 +1,69 @@
+<article class="about-page">
+  <div class="container">
+ 
+    <!-- INTRO -->
+    <div class="about-intro animate-fadeUp">
+      <div class="section-label">Sobre mí</div>
+      <h1 class="section-heading">Quien<br><em>soy.</em></h1>
+    </div>
+ 
+    <div class="about-grid">
+ 
+      <!-- LEFT — Bio -->
+      <div class="bio-col animate-fadeUp animate-delay-1">
+        <p class="bio-text">
+          Soy un desarrollador web fullstack apasionado por construir
+          soluciones digitales con arquitectura limpia y código mantenible.
+          Me especializo en el ecosistema Angular con SSR y backend con
+          Node.js + Express + PostgreSQL.
+        </p>
+        <p class="bio-text">
+          Mi enfoque va más allá del código: aplico metodologías de
+          elicitación de requisitos para entender profundamente los problemas
+          de negocio antes de escribir la primera línea, asegurando que cada
+          producto entregado resuelva el problema correcto.
+        </p>
+ 
+        <div class="contact-info">
+          <span class="text-muted font-mono" style="font-size:11px">
+            📍 Barranquilla, Colombia
+          </span>
+        </div>
+      </div>
+ 
+      <!-- RIGHT — Skills -->
+      <div class="skills-col animate-fadeUp animate-delay-2">
+        <div class="section-label">Habilidades técnicas</div>
+        <ul class="skills-list">
+          <li class="skill-item" *ngFor="let skill of skills">
+            <span class="skill-dot"></span>
+            {{ skill.name }}
+          </li>
+        </ul>
+      </div>
+    </div>
+ 
+    <!-- EXPERIENCIA -->
+    <div class="experience-section animate-fadeUp animate-delay-3">
+      <div class="section-label">Experiencia</div>
+ 
+      <div class="timeline">
+        <div class="timeline-item" *ngFor="let exp of experiences">
+          <div class="timeline-period">{{ exp.period }}</div>
+          <div class="timeline-content">
+            <h3 class="timeline-role">{{ exp.role }}</h3>
+            <div class="timeline-company">{{ exp.company }}</div>
+            <p class="timeline-desc">{{ exp.desc }}</p>
+            <span class="badge accent" *ngIf="exp.current">Actual</span>
+          </div>
+        </div>
+      </div>
+    </div>
+ 
+    <div class="about-cta animate-fadeUp">
+      <a class="btn-primary" routerLink="/elite">Trabajar conmigo →</a>
+      <a class="btn-secondary" routerLink="/recursos">Ver CV</a>
+    </div>
+ 
+  </div>
+</article>

@@ -1,0 +1,42 @@
+<section class="projects-page">
+  <div class="container">
+    <div class="projects-header animate-fadeUp">
+      <div>
+        <div class="section-label">Proyectos</div>
+        <h1 class="section-heading">Lo que<br><em>construyo.</em></h1>
+      </div>
+      <span class="font-mono text-muted" style="font-size:11px;letter-spacing:.05em">
+        {{ projects.length }} proyectos destacados
+      </span>
+    </div>
+ 
+    <div class="projects-grid">
+      <article
+        class="project-card animate-fadeUp"
+        *ngFor="let p of projects; let i = index"
+        [style.animation-delay]="(i * 0.1) + 's'"
+        [class.featured]="p.featured">
+ 
+        <div class="project-num">{{ p.num }}</div>
+        <h2 class="project-title">{{ p.title }}</h2>
+        <p class="project-desc">{{ p.desc }}</p>
+ 
+        <div class="project-tags">
+          <span class="tag" *ngFor="let tag of p.tags">{{ tag }}</span>
+        </div>
+ 
+        <div class="project-links">
+          <a *ngIf="p.repo" [href]="p.repo" target="_blank" class="project-link">
+            Repositorio →
+          </a>
+          <a *ngIf="p.live" [href]="p.live" target="_blank" class="project-link">
+            Demo en vivo →
+          </a>
+          <span *ngIf="!p.repo && !p.live" class="project-link muted">
+            En construcción
+          </span>
+        </div>
+      </article>
+    </div>
+  </div>
+</section>

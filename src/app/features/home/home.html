@@ -1,0 +1,65 @@
+<section class="hero">
+  <!-- LEFT PANEL -->
+  <div class="hero-left">
+    <div class="hero-eyebrow animate-fadeUp">
+      <span class="status-dot"></span>
+      Disponible para proyectos
+    </div>
+ 
+    <h1 class="hero-title animate-fadeUp animate-delay-1">
+      Eixon<br>De la<br>
+      <em class="text-accent">Torres.</em>
+    </h1>
+ 
+    <p class="hero-desc animate-fadeUp animate-delay-2">
+      Desarrollador web fullstack construyendo experiencias digitales
+      con Angular, Node.js y PostgreSQL. Soluciones con arquitectura
+      limpia y rendimiento real.
+    </p>
+ 
+    <div class="hero-actions animate-fadeUp animate-delay-3">
+      <a class="btn-primary" routerLink="/proyectos">
+        Ver proyectos <span>→</span>
+      </a>
+      <a class="btn-secondary" routerLink="/recursos">
+        Descargar CV
+      </a>
+    </div>
+ 
+    <div class="hero-stats animate-fadeUp animate-delay-4">
+      <div class="stat" *ngFor="let stat of stats">
+        <span class="stat-num">{{ stat.num }}</span>
+        <span class="stat-label">{{ stat.label }}</span>
+      </div>
+    </div>
+  </div>
+ 
+  <!-- RIGHT PANEL — Terminal -->
+  <div class="hero-right">
+    <div class="grid-bg"></div>
+ 
+    <div class="terminal animate-fadeUp animate-delay-2">
+      <div class="terminal-header">
+        <span class="dot red"></span>
+        <span class="dot yellow"></span>
+        <span class="dot green"></span>
+        <span class="terminal-title">eixon@dev:~/portfolio</span>
+      </div>
+      <div class="terminal-body" #typedCode>
+        <div
+          class="code-line"
+          *ngFor="let line of displayedLines"
+          [class.comment]="line.startsWith('//')"
+          [class.keyword]="line.includes('const') || line.includes('true')">
+          {{ line }}
+        </div>
+      </div>
+    </div>
+ 
+    <div class="stack-row">
+      <span class="badge" [class.accent]="i < 4" *ngFor="let tech of stack; let i = index">
+        {{ tech }}
+      </span>
+    </div>
+  </div>
+</section>

@@ -1,0 +1,43 @@
+<section class="resources-page">
+  <div class="container">
+ 
+    <div class="res-header">
+      <div class="section-label">Recursos</div>
+      <h1 class="section-heading">Conecta<br><em>conmigo.</em></h1>
+      <p class="res-intro">
+        Descarga mi CV, revisa mi trabajo en GitHub o conéctate en LinkedIn.
+        Estoy disponible para proyectos freelance y oportunidades laborales.
+      </p>
+    </div>
+ 
+    <div class="res-grid">
+      <div class="res-card" *ngFor="let r of resources">
+        <div class="res-icon">{{ r.icon }}</div>
+        <h2 class="res-title">{{ r.title }}</h2>
+        <p class="res-desc">{{ r.desc }}</p>
+        <a
+          [href]="r.href"
+          [target]="r.external ? '_blank' : '_self'"
+          [attr.rel]="r.external ? 'noopener noreferrer' : null"
+          [class]="r.primary ? 'btn-primary' : 'btn-secondary'">
+          {{ r.cta }}
+        </a>
+      </div>
+    </div>
+ 
+    <!-- STATUS BAR -->
+    <div class="status-bar">
+      <div class="status-item">
+        <span class="status-dot"></span>
+        <span class="status-text">Disponible para proyectos freelance</span>
+      </div>
+      <div class="status-item">
+        <span class="status-text text-muted">Tiempo de respuesta: &lt; 24h</span>
+      </div>
+      <div class="status-item">
+        <span class="status-text text-muted">Barranquilla, Colombia · UTC-5</span>
+      </div>
+    </div>
+ 
+  </div>
+</section>
