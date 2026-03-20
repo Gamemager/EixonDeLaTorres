@@ -1,5 +1,8 @@
-import { Component, OnInit, OnDestroy, ElementRef, ViewChild } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import {
+  Component, OnInit, OnDestroy,
+  Inject, PLATFORM_ID
+} from '@angular/core';
+import { isPlatformBrowser, CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
  
 @Component({
@@ -10,21 +13,21 @@ import { RouterLink } from '@angular/router';
   styleUrl: './home.css',
 })
 export class HomeComponent implements OnInit, OnDestroy {
-  @ViewChild('typedCode', { static: false }) typedCode!: ElementRef;
+  private isBrowser: boolean;
+  private typeInterval?: ReturnType<typeof setTimeout>;
  
   readonly stack = [
     'Angular 20+ SSR', 'Node.js', 'TypeScript', 'PostgreSQL',
-    'Express.js', 'Bootstrap', 'Angular Material', 'REST API'
+    'Express.js', 'Bootstrap', 'Angular Material', 'REST API',
   ];
  
   readonly stats = [
-    { num: '5+',  label: 'Proyectos' },
-    { num: '3+',  label: 'Tecnologías' },
-    { num: '∞',   label: 'Compromiso' },
+    { num: '5+', label: 'Proyectos'   },
+    { num: '3+', label: 'Tecnologías' },
+    { num: '∞',  label: 'Compromiso'  },
   ];
  
-  private typeInterval?: ReturnType<typeof setTimeout>;
-  private codeLines = [
+  private readonly codeLines = [
     '// desarrollador.ts',
     'const dev = {',
     '  nombre: "Eixon De la Torres",',
@@ -37,12 +40,20 @@ export class HomeComponent implements OnInit, OnDestroy {
     '// Listo para construir contigo',
     'dev.iniciarProyecto() ▌',
   ];
+ 
   displayedLines: string[] = [];
  
+  constructor(@Inject(PLATFORM_ID) platformId: object) {
+    this.isBrowser = isPlatformBrowser(platformId);
+  }
+ 
   ngOnInit(): void {
-    // Activar efecto de typewriter solo en el navegador
-    if (typeof window !== 'undefined') {
+    if (this.isBrowser) {
+      // Navegador: efecto typewriter animado
       this.startTyping();
+    } else {
+      // SSR/prerendering: mostrar todas las líneas de inmediato
+      this.displayedLines = [...this.codeLines];
     }
   }
  

@@ -1,4 +1,7 @@
-import {  Component, AfterViewInit, OnDestroy,  Inject, PLATFORM_ID} from '@angular/core';
+import {
+  Component, AfterViewInit, OnDestroy,
+  Inject, PLATFORM_ID
+} from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
 import { RouterOutlet } from '@angular/router';
 import { NavbarComponent } from './shared/components/navbar/navbar';
@@ -9,7 +12,7 @@ import { FooterComponent } from './shared/components/footer/footer';
   standalone: true,
   imports: [RouterOutlet, NavbarComponent, FooterComponent],
   templateUrl: './app.html',
-  styleUrl: './app.css'
+  styleUrl: './app.css',
 })
 export class App implements AfterViewInit, OnDestroy {
   private isBrowser: boolean;
@@ -23,35 +26,30 @@ export class App implements AfterViewInit, OnDestroy {
   }
  
   ngAfterViewInit(): void {
-    if (!this.isBrowser || typeof document === 'undefined') return;
- 
-    // Esperamos al siguiente tick para que la hidratación SSR termine
+    if (!this.isBrowser) return;  // ← guarda SOLO aquí
     setTimeout(() => this.initCursor(), 0);
   }
  
   private initCursor(): void {
-    // 1. Crear elementos y añadirlos al body
-    this.dot  = this.makeEl('eixon-dot',  {
+    // Guarda adicional dentro del setTimeout por si acaso
+    if (typeof document === 'undefined') return;
+ 
+    this.dot = this.makeEl('eixon-dot', {
       width: '10px', height: '10px',
-      background: '#00ffc8',
-      borderRadius: '50%',
-      zIndex: '99999',
-      mixBlendMode: 'difference',
+      background: '#00ffc8', borderRadius: '50%',
+      zIndex: '99999', mixBlendMode: 'difference',
     });
  
     this.ring = this.makeEl('eixon-ring', {
       width: '32px', height: '32px',
-      border: '1.5px solid #00ffc8',
-      borderRadius: '50%',
-      opacity: '0.55',
-      zIndex: '99998',
-      transition: 'transform 0.18s ease, opacity 0.18s ease',
+      border: '1.5px solid #00ffc8', borderRadius: '50%',
+      opacity: '0.55', zIndex: '99998',
+      transition: 'transform 0.18s ease',
     });
  
     document.body.appendChild(this.dot);
     document.body.appendChild(this.ring);
  
-    // 2. Seguir el mouse con rAF
     this.moveHandler = (e: MouseEvent) => {
       cancelAnimationFrame(this.rafId);
       this.rafId = requestAnimationFrame(() => {
@@ -61,9 +59,8 @@ export class App implements AfterViewInit, OnDestroy {
         if (this.ring) { this.ring.style.left = x; this.ring.style.top = y; }
       });
     };
-    document.addEventListener('mousemove', this.moveHandler);
  
-    // 3. Hover scale con delegación (funciona con elementos futuros)
+    document.addEventListener('mousemove', this.moveHandler);
     document.addEventListener('mouseover', this.onOver);
     document.addEventListener('mouseout',  this.onOut);
   }
@@ -80,23 +77,21 @@ export class App implements AfterViewInit, OnDestroy {
     if (this.ring) this.ring.style.transform = 'translate(-50%,-50%) scale(1)';
   };
  
-  private makeEl(id: string, extraStyles: Partial<CSSStyleDeclaration>): HTMLDivElement {
+  private makeEl(id: string, extra: Partial<CSSStyleDeclaration>): HTMLDivElement {
     document.getElementById(id)?.remove();
     const el = document.createElement('div');
     el.id = id;
     Object.assign(el.style, {
-      position:      'fixed',
-      top:           '0',
-      left:          '0',
-      pointerEvents: 'none',
-      transform:     'translate(-50%,-50%)',
-      willChange:    'left, top',
-      ...extraStyles,
+      position: 'fixed', top: '0', left: '0',
+      pointerEvents: 'none', transform: 'translate(-50%,-50%)',
+      willChange: 'left, top', ...extra,
     });
     return el;
   }
  
   ngOnDestroy(): void {
+    // Guarda en ngOnDestroy — también se ejecuta en SSR
+    if (!this.isBrowser || typeof document === 'undefined') return;
     if (this.moveHandler) document.removeEventListener('mousemove', this.moveHandler);
     document.removeEventListener('mouseover', this.onOver);
     document.removeEventListener('mouseout',  this.onOut);
