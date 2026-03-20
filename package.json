@@ -9,6 +9,9 @@
     "test": "ng test",
     "serve:ssr:frontend": "node dist/frontend/server/server.mjs"
   },
+  "overrides": {
+    "undici": "^7.23.1"
+  },
   "prettier": {
     "printWidth": 100,
     "singleQuote": true,
@@ -51,3 +54,4 @@
     "vitest": "^4.0.8"
   }
 }
+
