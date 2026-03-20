@@ -23,7 +23,7 @@ export class App implements AfterViewInit, OnDestroy {
   }
  
   ngAfterViewInit(): void {
-    if (!this.isBrowser) return;
+    if (!this.isBrowser || typeof document === 'undefined') return;
  
     // Esperamos al siguiente tick para que la hidratación SSR termine
     setTimeout(() => this.initCursor(), 0);
