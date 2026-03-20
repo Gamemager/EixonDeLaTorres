@@ -1,4 +1,6 @@
 <section class="elite-page">
+ 
+  <!-- HEADER -->
   <div class="elite-header">
     <div class="container">
       <div class="section-label">Módulo ELITE</div>
@@ -10,153 +12,145 @@
     </div>
   </div>
  
-  <div class="elite-body container">
-    <div class="elite-layout">
+  <div class="container elite-body">
  
-      <!-- ── STEPPER + FORM ── -->
+    <!-- ÉXITO POST-ENVÍO -->
+    <div class="success-state" *ngIf="submitted">
+      <div class="success-icon">✓</div>
+      <h2 class="success-title">¡Solicitud enviada!</h2>
+      <p class="success-desc">
+        Tu solicitud ELITE fue registrada con el ID
+        <strong class="text-accent">#{{ submittedId }}</strong>.
+        Me pondré en contacto contigo en menos de 24 horas.
+      </p>
+      <div class="success-actions">
+        <button class="btn-secondary" (click)="resetForm()">Enviar otra solicitud</button>
+        <button class="btn-primary" (click)="goHome()">Volver al inicio →</button>
+      </div>
+    </div>
+ 
+    <!-- FORMULARIO -->
+    <div class="elite-layout" *ngIf="!submitted">
+ 
+      <!-- STEPPER -->
       <div class="form-col">
         <mat-stepper #stepper orientation="vertical" [linear]="true">
  
-          <!-- ══ PASO 1: CONTEXTO ══ -->
-          <mat-step [stepControl]="ctxForm" label="Contexto">
-            <ng-template matStepLabel>
-              <span class="step-label-text">01 — Contexto</span>
-            </ng-template>
-            <form [formGroup]="ctxForm" class="step-form">
+          <!-- PASO 1: CONTEXTO -->
+          <mat-step [stepControl]="ctxForm">
+            <ng-template matStepLabel><span class="step-lbl">01 — Contexto</span></ng-template>
+            <form [formGroup]="ctxForm" class="step-form" autocomplete="off">
               <div class="step-intro">
                 <div class="step-tag">Contexto del proyecto</div>
                 <p class="step-hint">Información básica para identificar la solicitud.</p>
               </div>
- 
               <div class="field-row">
-                <mat-form-field appearance="fill" class="full-width">
+                <mat-form-field appearance="fill" class="fw">
                   <mat-label>Nombre del proyecto *</mat-label>
                   <input matInput formControlName="project_name" placeholder="Mi App SaaS">
-                  <mat-error *ngIf="ctxForm.get('project_name')?.hasError('required')">Campo requerido</mat-error>
+                  <mat-error>Requerido</mat-error>
                 </mat-form-field>
- 
-                <mat-form-field appearance="fill" class="full-width">
+                <mat-form-field appearance="fill" class="fw">
                   <mat-label>Fecha de elicitación *</mat-label>
                   <input matInput type="date" formControlName="elicitation_date">
-                  <mat-error *ngIf="ctxForm.get('elicitation_date')?.hasError('required')">Campo requerido</mat-error>
+                  <mat-error>Requerido</mat-error>
                 </mat-form-field>
               </div>
- 
               <div class="field-row">
-                <mat-form-field appearance="fill" class="full-width">
+                <mat-form-field appearance="fill" class="fw">
                   <mat-label>Stakeholder principal *</mat-label>
                   <input matInput formControlName="stakeholder_name" placeholder="Juan García">
-                  <mat-error *ngIf="ctxForm.get('stakeholder_name')?.hasError('required')">Campo requerido</mat-error>
+                  <mat-error>Requerido</mat-error>
                 </mat-form-field>
- 
-                <mat-form-field appearance="fill" class="full-width">
+                <mat-form-field appearance="fill" class="fw">
                   <mat-label>Email del stakeholder</mat-label>
                   <input matInput type="email" formControlName="stakeholder_email" placeholder="juan@empresa.com">
                   <mat-error *ngIf="ctxForm.get('stakeholder_email')?.hasError('email')">Email inválido</mat-error>
                 </mat-form-field>
               </div>
- 
               <div class="step-nav">
                 <span></span>
-                <button mat-button matStepperNext class="btn-next">Siguiente →</button>
+                <button mat-button matStepperNext class="btn-next" [disabled]="ctxForm.invalid">Siguiente →</button>
               </div>
             </form>
           </mat-step>
  
-          <!-- ══ PASO 2: ESTRATÉGICO ══ -->
-          <mat-step [stepControl]="strForm" label="Estratégico">
-            <ng-template matStepLabel>
-              <span class="step-label-text">02 — Estratégico</span>
-            </ng-template>
-            <form [formGroup]="strForm" class="step-form">
+          <!-- PASO 2: ESTRATÉGICO -->
+          <mat-step [stepControl]="strForm">
+            <ng-template matStepLabel><span class="step-lbl">02 — Estratégico</span></ng-template>
+            <form [formGroup]="strForm" class="step-form" autocomplete="off">
               <div class="step-intro">
                 <div class="step-tag">Visión estratégica</div>
                 <p class="step-hint">Define el propósito y los límites del proyecto.</p>
               </div>
- 
-              <mat-form-field appearance="fill" class="full-width" style="margin-bottom:16px">
+              <mat-form-field appearance="fill" class="fw mb">
                 <mat-label>Objetivo de negocio *</mat-label>
                 <textarea matInput formControlName="business_objective" rows="3"
                   placeholder="¿Qué quiere lograr el negocio con este proyecto?"></textarea>
-                <mat-error *ngIf="strForm.get('business_objective')?.hasError('required')">Campo requerido</mat-error>
+                <mat-error>Requerido</mat-error>
               </mat-form-field>
- 
-              <mat-form-field appearance="fill" class="full-width" style="margin-bottom:16px">
+              <mat-form-field appearance="fill" class="fw mb">
                 <mat-label>Problema a resolver *</mat-label>
                 <textarea matInput formControlName="problem_to_solve" rows="3"
                   placeholder="¿Qué dolor o fricción existe actualmente?"></textarea>
-                <mat-error *ngIf="strForm.get('problem_to_solve')?.hasError('required')">Campo requerido</mat-error>
+                <mat-error>Requerido</mat-error>
               </mat-form-field>
- 
               <div class="field-row">
-                <mat-form-field appearance="fill" class="full-width">
-                  <mat-label>Alcance (IN SCOPE) *</mat-label>
+                <mat-form-field appearance="fill" class="fw">
+                  <mat-label>Alcance — IN SCOPE *</mat-label>
                   <textarea matInput formControlName="project_scope" rows="3"
                     placeholder="Lo que SÍ incluye el proyecto"></textarea>
-                  <mat-error *ngIf="strForm.get('project_scope')?.hasError('required')">Campo requerido</mat-error>
+                  <mat-error>Requerido</mat-error>
                 </mat-form-field>
- 
-                <mat-form-field appearance="fill" class="full-width">
+                <mat-form-field appearance="fill" class="fw">
                   <mat-label>Fuera de alcance</mat-label>
                   <textarea matInput formControlName="out_of_scope" rows="3"
                     placeholder="Lo que NO incluye el proyecto"></textarea>
                 </mat-form-field>
               </div>
- 
               <div class="step-nav">
                 <button mat-button matStepperPrevious class="btn-back">← Anterior</button>
-                <button mat-button matStepperNext class="btn-next">Siguiente →</button>
+                <button mat-button matStepperNext class="btn-next" [disabled]="strForm.invalid">Siguiente →</button>
               </div>
             </form>
           </mat-step>
  
-          <!-- ══ PASO 3: ACTORES ══ -->
-          <mat-step [stepControl]="actForm" label="Actores">
-            <ng-template matStepLabel>
-              <span class="step-label-text">03 — Actores</span>
-            </ng-template>
-            <form [formGroup]="actForm" class="step-form">
+          <!-- PASO 3: ACTORES -->
+          <mat-step [stepControl]="actForm">
+            <ng-template matStepLabel><span class="step-lbl">03 — Actores</span></ng-template>
+            <form [formGroup]="actForm" class="step-form" autocomplete="off">
               <div class="step-intro">
                 <div class="step-tag">Actores del sistema</div>
                 <p class="step-hint">¿Quiénes interactúan con el sistema?</p>
               </div>
- 
               <div formArrayName="actors">
-                <div *ngFor="let actor of actors.controls; let i = index"
+                <div *ngFor="let ctrl of actors.controls; let i = index"
                      [formGroupName]="i" class="actor-card">
                   <div class="actor-header">
                     <span class="actor-num">Actor #{{ i + 1 }}</span>
-                    <button *ngIf="i > 0" type="button" class="actor-remove"
-                            (click)="removeActor(i)">✕</button>
+                    <button *ngIf="actors.length > 1" type="button"
+                            class="actor-remove" (click)="removeActor(i)">✕</button>
                   </div>
- 
                   <div class="field-row">
-                    <mat-form-field appearance="fill" class="full-width">
-                      <mat-label>Tipo de actor</mat-label>
+                    <mat-form-field appearance="fill" class="fw">
+                      <mat-label>Tipo</mat-label>
                       <mat-select formControlName="actor_type">
-                        <mat-option value="primary">Primario (interactúa directamente)</mat-option>
-                        <mat-option value="secondary">Secundario (interactúa indirectamente)</mat-option>
+                        <mat-option value="primary">Primario — interactúa directamente</mat-option>
+                        <mat-option value="secondary">Secundario — interactúa indirectamente</mat-option>
                       </mat-select>
                     </mat-form-field>
- 
-                    <mat-form-field appearance="fill" class="full-width">
+                    <mat-form-field appearance="fill" class="fw">
                       <mat-label>Nombre del actor</mat-label>
-                      <input matInput formControlName="actor_name" placeholder="Cliente final">
+                      <input matInput formControlName="actor_name" placeholder="Cliente final...">
                     </mat-form-field>
                   </div>
- 
-                  <mat-form-field appearance="fill" class="full-width">
-                    <mat-label>Permisos / Descripción del rol</mat-label>
-                    <input matInput formControlName="permissions"
-                      placeholder="Puede ver, crear y editar sus propios registros">
+                  <mat-form-field appearance="fill" class="fw">
+                    <mat-label>Permisos / Rol</mat-label>
+                    <input matInput formControlName="permissions" placeholder="Puede ver, crear y editar...">
                   </mat-form-field>
                 </div>
               </div>
- 
-              <button type="button" class="btn-add-actor" (click)="addActor()">
-                + Agregar actor
-              </button>
- 
+              <button type="button" class="btn-add-actor" (click)="addActor()">+ Agregar actor</button>
               <div class="step-nav">
                 <button mat-button matStepperPrevious class="btn-back">← Anterior</button>
                 <button mat-button matStepperNext class="btn-next">Siguiente →</button>
@@ -164,81 +158,68 @@
             </form>
           </mat-step>
  
-          <!-- ══ PASO 4: FUNCIONAL ══ -->
-          <mat-step [stepControl]="funcForm" label="Funcional">
-            <ng-template matStepLabel>
-              <span class="step-label-text">04 — Funcional</span>
-            </ng-template>
-            <form [formGroup]="funcForm" class="step-form">
+          <!-- PASO 4: FUNCIONAL -->
+          <mat-step [stepControl]="funcForm">
+            <ng-template matStepLabel><span class="step-lbl">04 — Funcional</span></ng-template>
+            <form [formGroup]="funcForm" class="step-form" autocomplete="off">
               <div class="step-intro">
                 <div class="step-tag">Requisitos funcionales</div>
-                <p class="step-hint">Define las funciones del sistema con User Stories.</p>
+                <p class="step-hint">Define las funciones con User Stories.</p>
               </div>
- 
-              <mat-form-field appearance="fill" class="full-width" style="margin-bottom:16px">
+              <mat-form-field appearance="fill" class="fw mb">
                 <mat-label>User Story *</mat-label>
                 <textarea matInput formControlName="user_story" rows="4"
-                  placeholder="Como [cliente], quiero [ver mis pedidos], para [hacer seguimiento de mis compras]."></textarea>
-                <mat-hint>Formato: Como [actor], quiero [acción], para [valor obtenido].</mat-hint>
-                <mat-error *ngIf="funcForm.get('user_story')?.hasError('required')">Campo requerido</mat-error>
+                  placeholder="Como [cliente], quiero [ver mis pedidos], para [hacer seguimiento]."></textarea>
+                <mat-hint>Como [actor], quiero [acción], para [valor].</mat-hint>
+                <mat-error>Requerido</mat-error>
               </mat-form-field>
- 
-              <mat-form-field appearance="fill" class="full-width" style="margin-bottom:16px">
+              <mat-form-field appearance="fill" class="fw mb">
                 <mat-label>Reglas de negocio</mat-label>
                 <textarea matInput formControlName="business_rules" rows="3"
-                  placeholder="RN-01: El usuario debe estar autenticado para acceder..."></textarea>
+                  placeholder="RN-01: El usuario debe estar autenticado..."></textarea>
               </mat-form-field>
- 
               <div class="field-row">
-                <mat-form-field appearance="fill" class="full-width">
+                <mat-form-field appearance="fill" class="fw">
                   <mat-label>Precondiciones</mat-label>
                   <textarea matInput formControlName="preconditions" rows="3"
                     placeholder="El usuario tiene sesión activa..."></textarea>
                 </mat-form-field>
- 
-                <mat-form-field appearance="fill" class="full-width">
+                <mat-form-field appearance="fill" class="fw">
                   <mat-label>Postcondiciones</mat-label>
                   <textarea matInput formControlName="postconditions" rows="3"
-                    placeholder="El sistema muestra la lista de pedidos..."></textarea>
+                    placeholder="El sistema muestra la lista..."></textarea>
                 </mat-form-field>
               </div>
- 
               <div class="step-nav">
                 <button mat-button matStepperPrevious class="btn-back">← Anterior</button>
-                <button mat-button matStepperNext class="btn-next">Siguiente →</button>
+                <button mat-button matStepperNext class="btn-next" [disabled]="funcForm.invalid">Siguiente →</button>
               </div>
             </form>
           </mat-step>
  
-          <!-- ══ PASO 5: CALIDAD RNF ══ -->
-          <mat-step [stepControl]="rnfForm" label="Calidad RNF">
-            <ng-template matStepLabel>
-              <span class="step-label-text">05 — Calidad RNF</span>
-            </ng-template>
-            <form [formGroup]="rnfForm" class="step-form">
+          <!-- PASO 5: CALIDAD RNF -->
+          <mat-step [stepControl]="rnfForm">
+            <ng-template matStepLabel><span class="step-lbl">05 — Calidad RNF</span></ng-template>
+            <form [formGroup]="rnfForm" class="step-form" autocomplete="off">
               <div class="step-intro">
                 <div class="step-tag">Requisitos no funcionales</div>
                 <p class="step-hint">Define los estándares de calidad del sistema.</p>
               </div>
- 
-              <mat-form-field appearance="fill" class="full-width" style="margin-bottom:16px">
+              <mat-form-field appearance="fill" class="fw mb">
                 <mat-label>Rendimiento</mat-label>
                 <textarea matInput formControlName="rnf_performance" rows="3"
-                  placeholder="Tiempo de respuesta < 2s. Soporte para 1000 usuarios concurrentes."></textarea>
+                  placeholder="Respuesta &lt; 2s, 1000 usuarios concurrentes."></textarea>
               </mat-form-field>
- 
-              <mat-form-field appearance="fill" class="full-width" style="margin-bottom:16px">
+              <mat-form-field appearance="fill" class="fw mb">
                 <mat-label>Seguridad</mat-label>
                 <textarea matInput formControlName="rnf_security" rows="3"
-                  placeholder="Autenticación JWT, cifrado AES-256, HTTPS obligatorio."></textarea>
+                  placeholder="JWT, cifrado AES-256, HTTPS obligatorio."></textarea>
               </mat-form-field>
- 
-              <mat-form-field appearance="fill" class="full-width">
+              <mat-form-field appearance="fill" class="fw">
                 <mat-label>Usabilidad</mat-label>
                 <textarea matInput formControlName="rnf_usability" rows="3"
-                  placeholder="Mobile-first, WCAG 2.1 AA, tiempo máximo de aprendizaje: 30 min."></textarea>
+                  placeholder="Mobile-first, WCAG 2.1 AA, aprendizaje &lt; 30 min."></textarea>
               </mat-form-field>
- 
               <div class="step-nav">
                 <button mat-button matStepperPrevious class="btn-back">← Anterior</button>
                 <button mat-button matStepperNext class="btn-next">Siguiente →</button>
@@ -246,19 +227,15 @@
             </form>
           </mat-step>
  
-          <!-- ══ PASO 6: PRIORIZACIÓN ══ -->
-          <mat-step [stepControl]="priForm" label="Priorización">
-            <ng-template matStepLabel>
-              <span class="step-label-text">06 — Priorización</span>
-            </ng-template>
-            <form [formGroup]="priForm" class="step-form">
+          <!-- PASO 6: PRIORIZACIÓN -->
+          <mat-step [stepControl]="priForm">
+            <ng-template matStepLabel><span class="step-lbl">06 — Priorización</span></ng-template>
+            <form [formGroup]="priForm" class="step-form" autocomplete="off">
               <div class="step-intro">
                 <div class="step-tag">Priorización MoSCoW</div>
                 <p class="step-hint">Define la urgencia e importancia del requisito.</p>
               </div>
- 
-              <!-- MoSCoW selector visual -->
-              <div class="moscow-label">Prioridad MoSCoW *</div>
+              <p class="field-label">Prioridad MoSCoW *</p>
               <div class="moscow-grid">
                 <div *ngFor="let opt of moscowOptions"
                      class="moscow-card"
@@ -269,29 +246,44 @@
                   <p class="moscow-desc">{{ opt.desc }}</p>
                 </div>
               </div>
- 
-              <mat-form-field appearance="fill" class="full-width" style="margin-top:24px">
+              <mat-form-field appearance="fill" class="fw" style="margin-top:24px">
                 <mat-label>Dependencias</mat-label>
                 <textarea matInput formControlName="dependencies" rows="3"
-                  placeholder="Depende de RF-02 y RF-05. Bloqueado por integración con ERP."></textarea>
+                  placeholder="Depende de RF-02. Bloqueado por integración con ERP."></textarea>
               </mat-form-field>
  
-              <!-- Resumen final -->
-              <div class="submit-box">
-                <div class="submit-icon">✓</div>
-                <div>
-                  <p class="submit-title">Listo para enviar</p>
-                  <p class="submit-desc">
-                    La solicitud se guardará en la base de datos PostgreSQL.
-                    Recibirás confirmación por email.
-                  </p>
+              <!-- Resumen -->
+              <div class="summary-box">
+                <div class="summary-title">Resumen de la solicitud</div>
+                <div class="summary-grid">
+                  <div class="summary-item">
+                    <span class="summary-key">Proyecto</span>
+                    <span class="summary-val">{{ ctxForm.get('project_name')?.value || '—' }}</span>
+                  </div>
+                  <div class="summary-item">
+                    <span class="summary-key">Stakeholder</span>
+                    <span class="summary-val">{{ ctxForm.get('stakeholder_name')?.value || '—' }}</span>
+                  </div>
+                  <div class="summary-item">
+                    <span class="summary-key">Actores</span>
+                    <span class="summary-val">{{ actors.length }}</span>
+                  </div>
+                  <div class="summary-item">
+                    <span class="summary-key">Prioridad</span>
+                    <span class="summary-val">{{ getMoscowLabel(priForm.get('moscow_priority')?.value) }}</span>
+                  </div>
                 </div>
               </div>
+ 
+              <div class="submit-error" *ngIf="submitError">⚠ {{ submitError }}</div>
  
               <div class="step-nav">
                 <button mat-button matStepperPrevious class="btn-back">← Anterior</button>
                 <button class="btn-submit" (click)="submit()" [disabled]="isSubmitting">
-                  {{ isSubmitting ? 'Enviando...' : 'Enviar solicitud ELITE ✓' }}
+                  <span *ngIf="!isSubmitting">Enviar solicitud ELITE →</span>
+                  <span *ngIf="isSubmitting" class="submitting-label">
+                    <span class="spinner"></span> Enviando...
+                  </span>
                 </button>
               </div>
             </form>
@@ -300,68 +292,71 @@
         </mat-stepper>
       </div>
  
-      <!-- ── PREVIEW PANEL ── -->
+      <!-- PREVIEW -->
       <aside class="preview-col">
         <div class="preview-header">
-          <span class="preview-badge">Vista previa</span>
+          <span class="preview-badge">Vista previa en vivo</span>
         </div>
- 
-        <div class="preview-block" *ngIf="ctxForm.get('project_name')?.value">
-          <div class="preview-section">Contexto</div>
-          <div class="preview-row" *ngIf="ctxForm.get('project_name')?.value">
-            <span class="preview-key">Proyecto</span>
-            <span class="preview-val">{{ ctxForm.get('project_name')?.value }}</span>
-          </div>
-          <div class="preview-row" *ngIf="ctxForm.get('stakeholder_name')?.value">
-            <span class="preview-key">Stakeholder</span>
-            <span class="preview-val">{{ ctxForm.get('stakeholder_name')?.value }}</span>
-          </div>
-          <div class="preview-row" *ngIf="ctxForm.get('elicitation_date')?.value">
-            <span class="preview-key">Fecha</span>
-            <span class="preview-val">{{ ctxForm.get('elicitation_date')?.value }}</span>
-          </div>
+        <div class="progress-bar-wrap">
+          <div class="progress-bar" [style.width.%]="progressPercent"></div>
         </div>
+        <span class="progress-label">{{ completedSteps }} / 6 pasos completados</span>
  
-        <div class="preview-block" *ngIf="strForm.get('business_objective')?.value">
-          <div class="preview-section">Estratégico</div>
-          <div class="preview-row">
-            <span class="preview-key">Objetivo</span>
-            <span class="preview-val preview-clamp">{{ strForm.get('business_objective')?.value }}</span>
+        <ng-container *ngIf="ctxForm.get('project_name')?.value">
+          <div class="preview-block">
+            <div class="preview-section">01 — Contexto</div>
+            <div class="preview-row">
+              <span class="preview-key">Proyecto</span>
+              <span class="preview-val">{{ ctxForm.get('project_name')?.value }}</span>
+            </div>
+            <div class="preview-row" *ngIf="ctxForm.get('stakeholder_name')?.value">
+              <span class="preview-key">Stakeholder</span>
+              <span class="preview-val">{{ ctxForm.get('stakeholder_name')?.value }}</span>
+            </div>
           </div>
-          <div class="preview-row" *ngIf="strForm.get('problem_to_solve')?.value">
-            <span class="preview-key">Problema</span>
-            <span class="preview-val preview-clamp">{{ strForm.get('problem_to_solve')?.value }}</span>
-          </div>
-        </div>
+        </ng-container>
  
-        <div class="preview-block" *ngIf="actors.length > 0">
-          <div class="preview-section">Actores ({{ actors.length }})</div>
-          <div *ngFor="let a of actors.controls; let i = index" class="preview-row">
-            <span class="preview-key">{{ a.get('actor_type')?.value === 'primary' ? 'Primario' : 'Secundario' }}</span>
-            <span class="preview-val">{{ a.get('actor_name')?.value || '—' }}</span>
+        <ng-container *ngIf="strForm.get('business_objective')?.value">
+          <div class="preview-block">
+            <div class="preview-section">02 — Estratégico</div>
+            <div class="preview-row">
+              <span class="preview-key">Objetivo</span>
+              <span class="preview-val preview-clamp">{{ strForm.get('business_objective')?.value }}</span>
+            </div>
           </div>
-        </div>
+        </ng-container>
  
-        <div class="preview-block" *ngIf="funcForm.get('user_story')?.value">
-          <div class="preview-section">User Story</div>
-          <div class="preview-row">
-            <span class="preview-val preview-clamp">{{ funcForm.get('user_story')?.value }}</span>
+        <ng-container *ngIf="actorsHaveData">
+          <div class="preview-block">
+            <div class="preview-section">03 — Actores ({{ actors.length }})</div>
+            <div *ngFor="let a of actors.controls" class="preview-row">
+              <span class="preview-key">{{ a.get('actor_type')?.value === 'primary' ? 'Primario' : 'Secundario' }}</span>
+              <span class="preview-val">{{ a.get('actor_name')?.value || '—' }}</span>
+            </div>
           </div>
-        </div>
+        </ng-container>
  
-        <div class="preview-block" *ngIf="priForm.get('moscow_priority')?.value">
-          <div class="preview-section">Prioridad</div>
-          <div class="preview-row">
-            <span class="preview-key">MoSCoW</span>
-            <span class="moscow-badge-preview">
-              {{ getMoscowLabel(priForm.get('moscow_priority')?.value) }}
-            </span>
+        <ng-container *ngIf="funcForm.get('user_story')?.value">
+          <div class="preview-block">
+            <div class="preview-section">04 — User Story</div>
+            <div class="preview-row">
+              <span class="preview-val preview-clamp preview-story">{{ funcForm.get('user_story')?.value }}</span>
+            </div>
           </div>
-        </div>
+        </ng-container>
  
-        <div class="preview-empty"
-             *ngIf="!ctxForm.get('project_name')?.value && !strForm.get('business_objective')?.value">
-          <p>Completa el formulario para ver la vista previa aquí.</p>
+        <ng-container *ngIf="priForm.get('moscow_priority')?.value">
+          <div class="preview-block">
+            <div class="preview-section">06 — Priorización</div>
+            <div class="preview-row">
+              <span class="preview-key">MoSCoW</span>
+              <span class="moscow-badge-preview">{{ getMoscowLabel(priForm.get('moscow_priority')?.value) }}</span>
+            </div>
+          </div>
+        </ng-container>
+ 
+        <div class="preview-empty" *ngIf="!ctxForm.get('project_name')?.value">
+          <p>Completa el formulario para ver la vista previa aquí en tiempo real.</p>
         </div>
       </aside>
  

@@ -1,7 +1,7 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import {  ReactiveFormsModule, FormBuilder, FormGroup, FormArray, Validators, AbstractControl,} from '@angular/forms';
-import { RouterLink } from '@angular/router';
+import { ReactiveFormsModule, FormBuilder, FormGroup, FormArray, Validators } from '@angular/forms';
+import { Router } from '@angular/router';
 import { MatStepper, MatStepperModule } from '@angular/material/stepper';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
@@ -9,13 +9,14 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatSelectModule } from '@angular/material/select';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatIconModule } from '@angular/material/icon';
-import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { STEPPER_GLOBAL_OPTIONS } from '@angular/cdk/stepper';
  
 import { ElicitationService } from '../../core/services/elicitation.service';
-import {  CreateElicitationDto,  MoscowPriority,  ElicitationActor,} from '../../core/models/elicitation.model';
- 
-// ── Tipos internos del componente ─────────────────────────────────
+import {
+  CreateElicitationDto,
+  MoscowPriority,
+  ElicitationActor,
+} from '../../core/models/elicitation.model';
  
 interface MoscowOption {
   value: MoscowPriority;
@@ -24,19 +25,12 @@ interface MoscowOption {
   desc:  string;
 }
  
-interface StepMeta {
-  num:   string;
-  label: string;
-  hint:  string;
-}
- 
 @Component({
   selector: 'app-elite',
   standalone: true,
   imports: [
     CommonModule,
     ReactiveFormsModule,
-    RouterLink,
     MatStepperModule,
     MatFormFieldModule,
     MatInputModule,
@@ -44,7 +38,6 @@ interface StepMeta {
     MatSelectModule,
     MatSnackBarModule,
     MatIconModule,
-    MatProgressSpinnerModule,
   ],
   providers: [{
     provide: STEPPER_GLOBAL_OPTIONS,
@@ -57,10 +50,11 @@ export class EliteComponent implements OnInit {
   @ViewChild('stepper') stepper!: MatStepper;
  
   // ── Estado ───────────────────────────────────────────
-  isSubmitting = false;
-  submitted    = false;
-  submittedId  = 0;
-  submitError  = '';
+  isSubmitting    = false;
+  submitted       = false;
+  submittedId     = 0;
+  submitError     = '';
+  private _moscowChanged = false;
  
   // ── FormGroups ───────────────────────────────────────
   ctxForm!:  FormGroup;
@@ -79,14 +73,13 @@ export class EliteComponent implements OnInit {
   ];
  
   constructor(
-    private fb:      FormBuilder,
-    private svc:     ElicitationService,
-    private snack:   MatSnackBar,
+    private fb:     FormBuilder,
+    private svc:    ElicitationService,
+    private snack:  MatSnackBar,
+    private router: Router,
   ) {}
  
-  ngOnInit(): void {
-    this.buildForms();
-  }
+  ngOnInit(): void { this.buildForms(); }
  
   // ── Construcción de formularios ──────────────────────
  
@@ -97,31 +90,26 @@ export class EliteComponent implements OnInit {
       stakeholder_email: ['', Validators.email],
       elicitation_date:  ['', Validators.required],
     });
- 
     this.strForm = this.fb.group({
       business_objective: ['', Validators.required],
       problem_to_solve:   ['', Validators.required],
       project_scope:      ['', Validators.required],
       out_of_scope:       [''],
     });
- 
     this.actForm = this.fb.group({
       actors: this.fb.array([this.newActorGroup()]),
     });
- 
     this.funcForm = this.fb.group({
       user_story:     ['', Validators.required],
       business_rules: [''],
       preconditions:  [''],
       postconditions: [''],
     });
- 
     this.rnfForm = this.fb.group({
       rnf_performance: [''],
       rnf_security:    [''],
       rnf_usability:   [''],
     });
- 
     this.priForm = this.fb.group({
       moscow_priority: [MoscowPriority.MUST_HAVE, Validators.required],
       dependencies:    [''],
@@ -147,7 +135,10 @@ export class EliteComponent implements OnInit {
  
   // ── MoSCoW ───────────────────────────────────────────
  
+  get moscowChanged(): boolean { return this._moscowChanged; }
+ 
   setMoscow(value: MoscowPriority): void {
+    this._moscowChanged = true;
     this.priForm.patchValue({ moscow_priority: value });
   }
  
@@ -156,10 +147,10 @@ export class EliteComponent implements OnInit {
     return opt ? `${opt.label} — ${opt.tag}` : value;
   }
  
-  // ── Getters para el preview ──────────────────────────
+  // ── Getters para el preview y progreso ───────────────
  
   get actorsHaveData(): boolean {
-    return this.actors.controls.some(c => c.get('actor_name')?.value);
+    return this.actors.controls.some(c => c.get('actor_name')?.value?.trim());
   }
  
   get rnfHasData(): boolean {
@@ -169,12 +160,12 @@ export class EliteComponent implements OnInit {
  
   get completedSteps(): number {
     let n = 0;
-    if (this.ctxForm.valid)                         n++;
-    if (this.strForm.valid)                         n++;
-    if (this.actors.length > 0)                     n++;
-    if (this.funcForm.valid)                        n++;
-    if (this.rnfHasData)                            n++;
-    if (this.priForm.get('moscow_priority')?.value) n++;
+    if (this.ctxForm.valid)  n++;   // paso 1: campos requeridos válidos
+    if (this.strForm.valid)  n++;   // paso 2: objetivo, problema, alcance
+    if (this.actorsHaveData) n++;   // paso 3: al menos 1 actor con nombre
+    if (this.funcForm.valid) n++;   // paso 4: user story escrita
+    if (this.rnfHasData)     n++;   // paso 5: al menos 1 campo RNF
+    if (this.moscowChanged)  n++;   // paso 6: usuario eligió MoSCoW manualmente
     return n;
   }
  
@@ -185,7 +176,6 @@ export class EliteComponent implements OnInit {
   // ── Envío ────────────────────────────────────────────
  
   submit(): void {
-    // Validar pasos obligatorios
     if (this.ctxForm.invalid || this.strForm.invalid || this.funcForm.invalid) {
       this.submitError = 'Completa todos los campos obligatorios antes de enviar.';
       return;
@@ -224,10 +214,12 @@ export class EliteComponent implements OnInit {
   // ── Reset ────────────────────────────────────────────
  
   resetForm(): void {
-    this.submitted   = false;
-    this.submittedId = 0;
-    this.submitError = '';
+    this.submitted      = false;
+    this.submittedId    = 0;
+    this.submitError    = '';
+    this._moscowChanged = false;
     this.buildForms();
-    // El stepper se resetea solo al destruirse y recrearse el *ngIf
   }
+ 
+  goHome(): void { this.router.navigate(['/']); }
 }
