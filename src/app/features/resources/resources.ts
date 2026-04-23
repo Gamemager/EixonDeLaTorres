@@ -25,7 +25,7 @@ export class ResourcesComponent {
       title:    'Currículum Vitae',
       desc:     'Descarga mi CV actualizado con experiencia, habilidades técnicas y proyectos destacados en formato PDF.',
       cta:      'Descargar CV',
-      href:     '/assets/cv-eixon-de-la-torres.pdf',
+      href:     'cv-eixon-de-la-torres.pdf',
       external: false,
       primary:  true,
     },
